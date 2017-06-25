@@ -1,0 +1,28 @@
+class Solution {
+public:
+    vector<int> findFrequentTreeSum( TreeNode* root ) {
+        unordered_map<int,int> counts;
+        int maxCount = 0;
+        countSubtreeSums( root, counts, maxCount );
+        
+        
+        vector<int> result;
+        for(const auto& x :  counts)
+            if ( x.second == maxCount ) 
+                result.push_back( x.first );
+        
+        return result;
+    }
+    
+    int countSubtreeSums( TreeNode* r, unordered_map<int, int>& counts, int& maxCount ) {
+        if ( !r ) 
+            return 0;
+        
+        int sum = r->val;
+        sum += countSubtreeSums( r->left, counts, maxCount );
+        sum += countSubtreeSums( r->right, counts, maxCount );
+        ++counts[sum];
+        maxCount = max( maxCount, counts[sum] );
+        return sum;
+    }
+};
